@@ -1,27 +1,17 @@
-<!-- Loads the ptah to static files -->
-{% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}" />
+ <!--# import base.html -->
+{% extends 'music/base.html' %}
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- logo -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="{% url 'music:index' %}">Viber</a>
-        </div>
+{% block body %}
+    {% if all_album %}
+        <h3>Here are all my Albums:</h3>
+        <ul>
+            {% for album in all_album %}
+            <!--# refer app_name & name = "..." in /music/urls.py -->
+            <li><a href="{% url 'music:detail' album.id %}">{{ album.title }}</a></li>
+            {% endfor%}
+        </ul>
+    {% else %}
+        <h3>You don't have any albums</h3>
 
-    </div>
-</nav>
-
-{% if all_album %}
-    <h3>Here are all my Albums:</h3>
-    <ul>
-        {% for album in all_album %}
-        <!--# refer app_name & name = "..." in /music/urls.py -->
-        <li><a href="{% url 'music:detail' album.id %}">{{ album.title }}</a></li>
-        {% endfor%}
-    </ul>
-{% else %}
-    <h3>You don't have any albums</h3>
-
-{% endif %}
+    {% endif %}
+ {% endblock %}
