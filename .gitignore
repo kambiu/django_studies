@@ -1,5 +1,5 @@
 *.sqlite3
-websites/music/migrations/*
-websites/.idea/*
-websites/websites/__pycache__/
-websites/music/__pycache__/
+*/*/migrations/*
+*/.idea/*
+*/__pycache__/
+*.pyc
