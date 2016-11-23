@@ -1,0 +1,8 @@
+.new_acc_label {
+    display: block;
+    width: 80px;
+}
+
+.datepicker {
+    z-index: 1600 !important; /* has to be larger than 1050 */
+}

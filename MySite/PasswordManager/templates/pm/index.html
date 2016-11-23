@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>XXXX</title>
-</head>
-<body>
-<h1>Hello how are you 2016</h1>
-<p>You got the following Groups:</p>
-<ul>
-{% for group in all_groups %}
-    <li>{{ group.name }}</li>
-{% endfor %}
-</ul>
-</body>
-</html>
+{% extends 'pm/base.html' %}
+
+
+{% block title %}This is index page{% endblock %}
+{% block head %}{% endblock %}
+
+{% block body %}
+    <h1>Hello how are you 2016</h1>
+    <p>You got the following Groups:</p>
+    <ul>
+    {% for group in all_groups %}
+        <li><a href="{% url 'pm:group-detail' group.id %}">{{ group.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

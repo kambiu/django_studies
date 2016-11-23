@@ -17,7 +17,7 @@ class Account(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     type = models.CharField(max_length=128)
     username = models.CharField(max_length=128)
-    password = models.CharField(max_length=128)
+    password = models.BinaryField()
     date_create = models.DateField()
     date_expire = models.DateField()
     remark = models.CharField(max_length=1000)

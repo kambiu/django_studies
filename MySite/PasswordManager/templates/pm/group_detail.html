@@ -1,0 +1,102 @@
+{% extends 'pm/base.html' %}
+
+
+{% block title %}Group: {{ object.name }}{% endblock %}
+
+{% block head %}
+<script>
+    function get_token(account_id) {
+        $.get("{% url 'pm:get-token' %}", {test_id: account_id}, function(data){
+            var token = prompt("Use CTRL-C to copy the password", data);
+       });
+    }
+
+    $(function () {
+        $('#txt_exp_date').datepicker({
+            dateFormat: "yy-mm-dd",
+            startDate: "01-01-2015",
+            todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true,
+        });
+    });
+
+</script>
+{% endblock %}
+
+{% block body %}
+<h1>{{ object.name }}</h1>
+<h3>Created in: {{ object.date_create }}</h3>
+<table class="table table-hover">
+    <tr>
+        <th>Type</th>
+        <th>Account</th>
+        <th>Date Created</th>
+        <th>Remark</th>
+        <th>Details</th>
+        <th>Fast Copy</th>
+    </tr>
+    {% for account in object.account_set.all %}
+        <tr>
+            <td>{{ account.type }}</td>
+            <td>{{ account.username }}</td>
+            <td>{{ account.date_create }}</td>
+            <td>{{ account.remark }}</td>
+            <td><button>Edit</button></td>
+            <td><button onclick="get_token('{{ account.id }}')">Copy</button></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<button id="button_create_account" data-toggle="modal" data-target="#myModal">Create New Account</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Adding a new account to {{ object.name }} </h4>
+            </div>
+            <div class="modal-body">
+                {% include 'pm/account_add.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+function copyToClipboard(text) {
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+}
+
+$("#gen_token").click(function() {
+    var token_length = parseInt($("#pw_length").val());
+    var token_level = parseInt($("#token_level").val());
+    var random_token = get_random_token(token_level, token_length);
+    $("#txt_token").val(random_token);
+});
+
+$("#button_create_account").click(function() {
+    console.log("button_create_account");
+    $("#txt_acc_type").val("");
+    $("#txt_acc").val("");
+    $("#txt_token").val("");
+    $("#txt_exp_date").val("");
+    $("#txt_remark").val("");
+});
+
+$("#submit_create_account").click(function() {
+    console.log("submit_create_account");
+});
+
+</script>
+
+{% endblock %}
+
+

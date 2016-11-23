@@ -1,0 +1,77 @@
+<form id="create_account_form" class="form-horizontal" method="POST" action="{% url 'pm:account-add' %}" autocomplete="off">{% csrf_token %}
+    <div class="form-group row">
+          <label class="col-xs-5 col-form-label" for="txt_acc_group">Group</label>
+          <div class="col-xs-7">
+               <input class="form-control" type="text" value="{{ object.name }}" id="txt_acc_group" disabled>
+          </div>
+    </div>
+    <div class="form-group row" hidden>
+          <label class="col-xs-5 col-form-label" for="txt_acc_group_id">Group ID</label>
+          <div class="col-xs-7">
+               <input name="acc_grp_id" class="form-control" type="text" value="{{ object.id }}" id="txt_acc_group_id">
+          </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-xs-5 col-form-label" for="txt_acc_type">Account Type</label>
+        <div class="col-xs-7">
+            <input name="acc_type" class="form-control" type="text" value="" id="txt_acc_type">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-xs-5 col-form-label" for="txt_acc">Account</label>
+        <div class="col-xs-7">
+            <input name="acc_name" class="form-control" type="text" value="" id="txt_acc">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-xs-5 col-form-label" for="txt_token">Password</label>
+        <div class="col-xs-7">
+            <input name="acc_token" class="form-control" type="text" value="" id="txt_token">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-xs-5 col-form-label" for="txt_exp_date">Expiry Date</label>
+        <div class="col-xs-7">
+            <div class='input-group date' id="dtp">
+                <input name="acc_exp_date" type='text' class="form-control datepicker" id="txt_exp_date" />
+                <span id="sdtp" class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-xs-5 col-form-label" for="txt_remark">Remarks</label>
+        <div class="col-xs-7">
+            <input name="acc_remark" class="form-control" type="text" value="" id="txt_remark">
+        </div>
+    </div>
+
+    <hr/> <!------------------------------------------------------------------------>
+    <div class="form-group">
+        <div class="col-xs-5">
+            <label class=" col-form-label" for="txt_remark">Get Random Password</label>
+        </div>
+
+        <div class="col-xs-3">
+            <select id="token_level" class="form-control">
+                 <option value="0">Numbers</option>
+                 <option value="1">AlphaNumeric</option>
+                 <option value="2">Strong</option>
+                 <option value="3" selected="selected">Secure</option>
+            </select>
+        </div>
+        <div class="col-xs-2">
+            <input type="text" id="pw_length" value="12" class="form-control" />
+        </div>
+        <div class="col-xs-2">
+            <input type="button" id="gen_token" class="form-control" value="Get" />
+        </div>
+    </div>
+
+    <hr/>
+    <div class="text-right">
+        <input type="submit" id="submit_create_account"  class="btn btn-default" form="create_account_form" value="Create" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+</form>
