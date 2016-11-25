@@ -1,11 +1,12 @@
 from django.shortcuts import render_to_response
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import HttpResponse, HttpResponseRedirect
 from .models import Group, Account
 from .forms import AccountForm
 import datetime
+from PasswordManager import common
 
 class IndexView(generic.ListView):
     template_name = 'pm/index.html'
@@ -49,8 +50,11 @@ def token(request):
     if request.method == 'GET':
         token_id = request.GET['test_id']
         all_acounts = Account.objects.all().filter(id=token_id)
-        print (all_acounts[0].password)
-        return HttpResponse("Password is: " + all_acounts[0].password)
+        binary_password = all_acounts[0].password
+        login_password = "admin"
+        hashed_key = common.get_key(login_password)
+        token_display = common.decrypt(hashed_key, binary_password)
+        return HttpResponse(token_display)
     else:
         return HttpResponse("Error made.")
     # return render_to_response('pm/group_detail.html', {'token': str(token_id) + " added"})
@@ -64,14 +68,19 @@ def account_create(request):
 
         create_date = datetime.datetime.now().strftime("%Y-%m-%d")
         order_id = 0  # default to zero first
+        login_password = "admin"
+        hashed_key = common.get_key(login_password)
+
         if form.is_valid():
             acc_group_id = form.cleaned_data['acc_grp_id']
             acc_group = Group.objects.get(pk=acc_group_id)
             new_account = Account()
             new_account.Group = acc_group
+            new_account.group_id = acc_group_id
             new_account.type = form.cleaned_data['acc_type']
             new_account.username = form.cleaned_data['acc_name']
-            new_account.password = form.cleaned_data['acc_token']
+            binary_token = common.encrypt(hashed_key, form.cleaned_data['acc_token'])
+            new_account.password = binary_token
             new_account.date_create = create_date
             new_account.date_expire = form.cleaned_data['acc_exp_date']
             new_account.remark = form.cleaned_data['acc_remark']
@@ -85,5 +94,5 @@ def account_create(request):
     else:
         form = AccountForm()
 
-    return HttpResponseRedirect('pm:index')
+    return HttpResponseRedirect(reverse('pm:group-detail', args=(acc_group_id,)))
     # return HttpResponseRedirect('pm:group-detail')

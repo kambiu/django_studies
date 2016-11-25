@@ -21,6 +21,16 @@ def decrypt(key, token):
     f = Fernet(key)
     return f.decrypt(token).decode('utf-8')
 
+def get_key(key):
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=b"thisMustBeConstant",
+        iterations=100000,
+        backend=default_backend()
+    )
+
+    return base64.urlsafe_b64encode(kdf.derive(key.encode('utf-8')))
 
 def get_random_token(length=8, security=PIN):
     chars = None
@@ -63,7 +73,16 @@ def test_crypto():
 
 
 if __name__ == "__main__":
-    test_crypto()
+
+    encoded_key = get_key("123")
+    a = encrypt(encoded_key, "test string")
+    print("Encrypted Password in db:")
+    print(a)
+
+    b = decrypt(encoded_key, a)
+    print("\nDecrypted Password in db:")
+    print(b)
+    # test_crypto()
 
 
 
