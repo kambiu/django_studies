@@ -6,9 +6,9 @@
 {% block head %}
 <script>
     function get_token(account_id) {
-        $.get("{% url 'pm:get-token' %}", {test_id: account_id}, function(data){
+        $.get("{% url 'pm:get-token' %}", {acc_id: account_id}, function(data){
             var token = prompt("Use CTRL-C to copy the password", data);
-       });
+        });
     }
 
     $(function () {
@@ -42,7 +42,7 @@
             <td>{{ account.username }}</td>
             <td>{{ account.date_create }}</td>
             <td>{{ account.remark }}</td>
-            <td><button>Edit</button></td>
+            <td><button id="edit_acc_{{account.id}}"class="edit-acc" data-toggle="modal" data-target="#myModal">Edit</button></td>
             <td><button onclick="get_token('{{ account.id }}')">Copy</button></td>
         </tr>
     {% endfor %}
@@ -60,7 +60,7 @@
                 <h4 class="modal-title">Adding a new account to {{ object.name }} </h4>
             </div>
             <div class="modal-body">
-                {% include 'pm/account_add.html' %}
+                {% include 'pm/account_form.html' %}
             </div>
         </div>
     </div>
@@ -83,16 +83,32 @@ $("#gen_token").click(function() {
 });
 
 $("#button_create_account").click(function() {
-    console.log("button_create_account");
     $("#txt_acc_type").val("");
     $("#txt_acc").val("");
     $("#txt_token").val("");
     $("#txt_exp_date").val("");
     $("#txt_remark").val("");
+
+
+    $('#account_form').attr('action', "{% url 'pm:account-create' %}");
+    $("#submit_account").val("Create");
 });
 
-$("#submit_create_account").click(function() {
-    console.log("submit_create_account");
+$(".edit-acc").click(function() {
+    var attr_id = $(this).attr('id').match(/\d+/)[0];
+    var action_url = "{% url 'pm:account-update' 12345 %}".replace("12345", attr_id)
+    $('#account_form').attr('action', action_url);
+
+    $.get("{% url 'pm:account-details' %}", {acc_id: attr_id}, function(data){
+
+        data = JSON.parse(data);
+        $("#txt_acc_type").val(data["acc_type"]);
+        $("#txt_acc").val(data["acc_name"]);
+        $("#txt_token").val(data["acc_token"]);
+        $("#txt_exp_date").val(data["acc_exp_date"]);
+        $("#txt_remark").val(data["acc_remark"]);
+        $("#submit_account").val("Update");
+    });
 });
 
 </script>

@@ -1,16 +1,9 @@
 Steps following:
 
-
-1. Edit password details
-2. login page
-
---------------------
-Other Features:
---------------------
-Display account details and how to copy the password
-Login page -> check 3 times of login
-Fast copy
-email if anyone access
-create group & account
-import or export password list?
-change all password if master password changes
+1. login page extend existing auth table
+2. Email if login wrong 3 times or any success login
+3. Mass password encryption change
+4. Import & Export password list
+5. Combine to template and create the mysite page
+6. Fix the group-add/delete display page
+7. Deploy to IIS/Nginx
