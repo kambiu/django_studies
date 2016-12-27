@@ -1,0 +1,15 @@
+{% extends 'pm/base.html' %}
+
+
+{% block title %}Key Change{% endblock %}
+{% block head %}{% endblock %}
+
+{% block body %}
+    <h1>This is key page for {{ user_name }}</h1>
+    <h2>Existing key: {{ user_key }}</h2>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label for="key">New Key:</label> <input type="text" id="key" name="key">
+        <input type="submit">
+    </form>
+{% endblock %}

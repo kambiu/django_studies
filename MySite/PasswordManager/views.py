@@ -3,14 +3,16 @@ from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from .models import Group, Account
-from .forms import AccountForm
+from .models import Group, Account, MyUser, User
+from .forms import AccountForm, UserForm, UserProfileForm
 import datetime
 from PasswordManager import common
 import json
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
+from django.template import RequestContext
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 
 def logout_request(request):
@@ -28,12 +30,24 @@ def login_request(request):
     password = request.POST['password']
 
     user = authenticate(username=username, password=password)
-    print(user)
+
+    attempt_user = User.objects.get(username=username)
+    attempt_my_user = MyUser.objects.get(user_id=attempt_user.id)
+    # print(attempt_my_user.retry_times)
+
+    if attempt_my_user.retry_times >= 3:
+        attempt_user.is_active = False
+        attempt_user.save()
+        return HttpResponseNotFound('<h1>This account is disabled</h1>')
+
     if user is not None:
         login(request, user)
-        print("Return login")
+        attempt_my_user.retry_times = 0
+        attempt_my_user.save()
         return HttpResponseRedirect(reverse('pm:index'))
     else:
+        attempt_my_user.retry_times += 1
+        attempt_my_user.save()
         return HttpResponseNotFound('<h1>User not found</h1>')
 
 def index(request):
@@ -42,7 +56,7 @@ def index(request):
     else:
         return HttpResponseRedirect(reverse('pm:login'))
 
-
+@method_decorator(login_required, name='dispatch')
 class GroupListView(generic.ListView):
 
     template_name = 'pm/group_list.html'
@@ -56,7 +70,7 @@ class GroupListView(generic.ListView):
         context['user'] = self.request.user.username
         return context
 
-
+@method_decorator(login_required, name='dispatch')
 class GroupDetailView(generic.DetailView):
     model = Group  # this only work for url pass in parameters
     template_name = 'pm/group_detail.html'
@@ -66,14 +80,19 @@ class GroupDetailView(generic.DetailView):
         context['user_id'] = self.request.user.id
         return context
 
-
+@method_decorator(login_required, name='dispatch')
 class GroupCreate(CreateView):
     template_name = "pm/group_template.html"
     model = Group
-    fields = ['name', 'date_create', 'remark', 'order_id']
+    fields = ['name', 'date_create', 'remark', 'order_id', 'user']
     success_url = reverse_lazy("pm:index")
 
+    def get_context_data(self, **kwargs):
+        context = super(GroupCreate, self).get_context_data(**kwargs)
+        context['user_id'] = self.request.user.id
+        return context
 
+@method_decorator(login_required, name='dispatch')
 class GroupUpdate(UpdateView):
     template_name = "pm/group_template.html"
     model = Group
@@ -81,12 +100,13 @@ class GroupUpdate(UpdateView):
     success_url = reverse_lazy("pm:index")
 
 
+@method_decorator(login_required, name='dispatch')
 class GroupDelete(DeleteView):
     template_name = "pm/group_template.html"
     model = Group
     success_url = reverse_lazy("pm:index")
 
-
+@login_required
 def token(request):
     if request.method == 'GET':
         account_id = request.GET['acc_id']
@@ -98,9 +118,9 @@ def token(request):
     else:
         return HttpResponse("Error made.")
 
-
+@login_required
 def account_create(request):
-
+    redirect_page_arg = 0
     if request.method == 'POST':
         form = AccountForm(request.POST)
 
@@ -115,6 +135,7 @@ def account_create(request):
             new_account = Account()
             new_account.Group = acc_group
             new_account.group_id = acc_group_id
+            redirect_page_arg = acc_group_id
             new_account.type = form.cleaned_data['acc_type']
             new_account.username = form.cleaned_data['acc_name']
             binary_token = common.encrypt(hashed_key, form.cleaned_data['acc_token'])
@@ -129,9 +150,9 @@ def account_create(request):
     else:
         form = AccountForm()
 
-    return HttpResponseRedirect(reverse('pm:group-detail', args=(acc_group_id,)))
+    return HttpResponseRedirect(reverse('pm:group-detail', args=(redirect_page_arg,)))
 
-
+@login_required
 def account_update(request, account_id):
 
     if request.method == 'POST':
@@ -156,7 +177,7 @@ def account_update(request, account_id):
 
     return HttpResponseRedirect(reverse('pm:group-detail', args=(update_account.group_id,)))
 
-
+@login_required
 def account_details(request):
     if request.method == 'GET':
         account_id = request.GET['acc_id']
@@ -176,4 +197,37 @@ def account_details(request):
         return HttpResponse(json.dumps(dict_details))
     else:
         return HttpResponse("Error made.")
-    # return render_to_response('pm/group_detail.html', {'token': str(token_id) + " added"})
+    return render_to_response('pm/group_detail.html', {'token': str(token_id) + " added"})
+
+@method_decorator(login_required, name='dispatch')
+class UserListView(generic.ListView):
+    template_name = 'pm/user_list.html'
+    context_object_name = "all_users"
+
+    def get_queryset(self):
+        return User.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        context['name'] = "123"
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UserCreate(CreateView):
+    template_name = "pm/user_form.html"
+    model = User
+    fields = ['username', 'password']
+    # fields = ['username', 'password', "encrypt_key"]
+    success_url = reverse_lazy("pm:index")
+
+
+@login_required
+def change_key(request):
+    context = dict()
+    context["user_name"] = request.user
+    u = User.objects.get(username=request.user)
+    print(u)
+    print(u.myuser.encrypt_key)
+    context["user_key"] = User.objects.get(username=request.user).myuser.encrypt_key
+    return render_to_response('pm/key.html', context)

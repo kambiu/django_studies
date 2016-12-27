@@ -1,7 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db.models.signals import post_save
 # Create your models here.
+
+class MyUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    encrypt_key = models.CharField(max_length=256)
+    retry_times = models.IntegerField(null=True, blank=True, default=0)
+
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#        profile, created = MyUser.objects.get_or_create(user=instance)
+
+# post_save.connect(create_user_profile, sender=User)
 
 class Group(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

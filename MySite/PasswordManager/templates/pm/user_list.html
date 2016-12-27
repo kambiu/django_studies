@@ -1,0 +1,16 @@
+{% extends 'pm/base.html' %}
+
+
+{% block title %}This is user list page{% endblock %}
+{% block head %}{% endblock %}
+
+{% block body %}
+    <p>You got the following MyUsers:</p>
+    <ul>
+    {% for user in all_users %}
+        <li><a href="{% url 'pm:account-update' user.id %}">{{ user.username }}</a></li>
+    {% endfor %}
+    </ul>
+
+    <button onclick="window.location.href='{% url 'pm:account-create' %}'">Create User</button>
+{% endblock %}

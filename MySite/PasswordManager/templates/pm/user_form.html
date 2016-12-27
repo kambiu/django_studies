@@ -1,0 +1,36 @@
+{% extends 'pm/base.html' %}
+
+
+{% block title %}This is user form page{% endblock %}
+{% block head %}{% endblock %}
+
+{% block body %}
+    <!--<form class="form-horizontal" action="" method="post" enctype="multipart/form-data" autocomplete="off">-->
+        <!--{% csrf_token %}-->
+        <!--{% for field in form %}-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-offset-2 col-sm-10">-->
+                    <!--<span class="text-danger small">{{ field.errors }}</span>-->
+                <!--</div>-->
+                <!--<label class="control-label col-sm-2">{{ field.label_tag }}</label>-->
+
+                <!--{% if "date" in field.label_tag|lower %}-->
+                    <!--<div class="col-sm-10 date">{{ field }}</div>-->
+                <!--{% else %}-->
+                    <!--<div class="col-sm-10">{{ field }} </div>-->
+                <!--{% endif %}-->
+            <!--</div>-->
+        <!--{% endfor %}-->
+        <!--<div class="form-group">-->
+            <!--<div class="col-sm-offset-2 col-sm-10">-->
+                <!--<button type="submit" class="btn btn-success">Submit</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</form>-->
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{userform}}
+        {{userprofileform}}
+        <input type="submit">
+    </form>
+{% endblock %}

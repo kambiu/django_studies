@@ -1,4 +1,7 @@
 from django import forms
+from django.forms import ModelForm
+from .models import MyUser
+from django.contrib.auth.models import User
 
 
 class AccountForm(forms.Form):
@@ -9,3 +12,14 @@ class AccountForm(forms.Form):
     acc_exp_date = forms.DateField(label='Expiry Date')
     acc_remark = forms.CharField(label='Remark', max_length=100)
 
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = MyUser
+        exclude = ['user']
