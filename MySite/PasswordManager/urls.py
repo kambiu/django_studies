@@ -22,5 +22,7 @@ urlpatterns = [
     url(r'^account/$', views.account_details, name='account-details'),
     # change key
     url(r'^key/$', views.change_key, name='user-key'),
+    # testing
+    url(r'^test/$', views.test, name='test'),
 
 ]

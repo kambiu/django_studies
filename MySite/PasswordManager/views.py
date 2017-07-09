@@ -231,3 +231,7 @@ def change_key(request):
     print(u.myuser.encrypt_key)
     context["user_key"] = User.objects.get(username=request.user).myuser.encrypt_key
     return render_to_response('pm/key.html', context)
+
+
+def test(request):
+    return render_to_response('pm/index.html')

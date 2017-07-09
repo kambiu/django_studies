@@ -1,4 +1,4 @@
-{% extends 'pm/base.html' %}
+{% extends 'pm/index.html' %}
 
 
 {% block title %}This is login page{% endblock %}
@@ -7,8 +7,19 @@
 {% block body %}
     <h1>Hello how are you 2016</h1>
     <form action="{% url 'pm:login-request' %}" method="post" autocomplete="off">{% csrf_token %}
-        <label>Account: </label><input name="username" type="text" />
-        <label>Password: </label><input name="password" type="password" />
-        <input type="submit" value="Login"/>
+    	<div class="form-group">
+    		<label for="inputlg">Account: </label>
+    		<input name="username" type="text" class="form-control input-lg" />
+    	</div>
+    	<div class="form-group">
+    		<label for="inputlg">Password: </label>
+    		<input name="password" type="password" class="form-control input-lg" />
+        </div>
+        <br>
+        <div class="form-group text-center">
+        	<!-- <div class="col-sm-2 col-md-2 col-lg-2"> -->
+        		<input type="submit" value="Login" class="btn btn-primary col-sm-2 col-md-2 col-lg-2" />
+        	<!-- </div>        -->
+        </div>
     </form>
 {% endblock %}
