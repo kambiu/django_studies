@@ -1,4 +1,4 @@
-{% extends 'pm/base.html' %}
+{% extends 'pm/index.html' %}
 
 
 {% block title %}Group: {{ object.name }}{% endblock %}
@@ -42,7 +42,7 @@
             <td>{{ account.username }}</td>
             <td>{{ account.date_create }}</td>
             <td>{{ account.remark }}</td>
-            <td><button id="edit_acc_{{account.id}}"class="edit-acc" data-toggle="modal" data-target="#myModal">Edit</button></td>
+            <td><button id="edit_acc_{{account.id}}" class="edit-acc" data-toggle="modal" data-target="#myModal">Edit</button></td>
             <td><button onclick="get_token('{{ account.id }}')">Copy</button></td>
         </tr>
     {% endfor %}
@@ -67,10 +67,10 @@
 </div>
 
 
-</body>
+{% endblock %}
 
+{% block js %}
 <script>
-
 function copyToClipboard(text) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 }

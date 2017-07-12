@@ -11,11 +11,14 @@
     {% load staticfiles %}
     <!-- css -->
     <link href="{% static 'pm/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+
     <link href="{% static 'pm/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
 	<link href="{% static 'pm/css/nivo-lightbox.css' %}" rel="stylesheet" />
 	<link href="{% static 'pm/css/nivo-lightbox-theme/default/default.css' %}" rel="stylesheet" type="text/css" />
 	<link href="{% static 'pm/css/animate.css' %}" rel="stylesheet" />
     <link href="{% static 'pm/css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <link href="{% static 'pm/mysite.css' %}" rel="stylesheet" type="text/css" />
 
 	<!-- template skin -->
 	<link id="t-colors" href="{% static 'pm/color/default.css' %}" rel="stylesheet">
@@ -29,7 +32,7 @@
 
 
 <div id="wrapper">
-	
+
     <nav class="navbar navbar-custom" role="navigation">
         <div class="container">
 		
@@ -47,8 +50,8 @@
 			  <ul class="nav navbar-nav">
 				<li><div id="cart"></div></li>
 				<li class="active"><a href="#intro">Home</a></li>
-				<li><a href="#">Password Manager</a> </li>
-
+				<li><a href="#">Password Manager</a></li>
+				<li><a href="../logout">logout</a></li>
 			  </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -72,7 +75,7 @@
 						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
 						<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-						<li><a href="#"><i class="fa fa-youtube"></i></a></li>
+						<li><a href="#"><i class="fa fa-youtube"></i></a></li>						
 					</ul>
 				
 					<div class="wow fadeInLeft" data-wow-delay="0.1s">
@@ -99,18 +102,21 @@
 	</footer>
 
 </div>
+
 <a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
 
 	<!-- Core JavaScript Files -->
-    <script src="{% static 'pm/js/jquery.min.js' %}"></script>	 
+    <script src="{% static 'pm/js/jquery.min.js' %}"></script>
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>	 
     <script src="{% static 'pm/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'pm/js/jquery.easing.min.js' %}"></script>
 	<script src="{% static 'pm/js/wow.min.js' %}"></script>
 	<script src="{% static 'pm/js/jquery.scrollTo.js' %}"></script>
 	<script src="{% static 'pm/js/nivo-lightbox.min.js' %}"></script>
     <script src="{% static 'pm/js/custom.js' %}"></script>
-
-
+    <script src="{% static 'pm/temp.js' %}"></script>
+{% block js %}
+{% endblock %}
 </body>
 
 </html>
