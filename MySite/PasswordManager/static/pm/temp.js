@@ -1,11 +1,11 @@
 // temp JS file
 
 function get_token(account_id) {
-    alert("Enter get_token js");
-    alert("{% url 'pm:token' 1 %}");
-//    $.get("'{% url pm:token " + account_id + " %}'", function (data) {
-//        alert(data);
-//    });
+    // alert("Enter get_token js");
+    // alert("{% url 'pm:token' 1 %}");
+   $.get("'{% url pm:token " + account_id + " %}'", function (data) {
+       alert(data);
+   });
 }
 
 function get_random_token(complexity, length)

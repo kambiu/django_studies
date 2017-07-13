@@ -100,7 +100,6 @@ $(".edit-acc").click(function() {
     $('#account_form').attr('action', action_url);
 
     $.get("{% url 'pm:account-details' %}", {acc_id: attr_id}, function(data){
-
         data = JSON.parse(data);
         $("#txt_acc_type").val(data["acc_type"]);
         $("#txt_acc").val(data["acc_name"]);

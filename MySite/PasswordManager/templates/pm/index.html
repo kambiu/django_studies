@@ -9,19 +9,26 @@
 
     <title>{% block title %}Title Default Value{% endblock %}</title>
     {% load staticfiles %}
-    <!-- css -->
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
     <link href="{% static 'pm/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
-
-    <link href="{% static 'pm/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'pm/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" /> 	
 	<link href="{% static 'pm/css/nivo-lightbox.css' %}" rel="stylesheet" />
 	<link href="{% static 'pm/css/nivo-lightbox-theme/default/default.css' %}" rel="stylesheet" type="text/css" />
 	<link href="{% static 'pm/css/animate.css' %}" rel="stylesheet" />
-    <link href="{% static 'pm/css/style.css' %}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
-    <link href="{% static 'pm/mysite.css' %}" rel="stylesheet" type="text/css" />
-
-	<!-- template skin -->
+	<link href="{% static 'pm/css/style.css' %}" rel="stylesheet">
 	<link id="t-colors" href="{% static 'pm/color/default.css' %}" rel="stylesheet">
+
+	<!-- base.html 3 css -->
+	<!-- <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/> -->
+    <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> -->
+	<link rel="stylesheet" type="text/css" href="{% static 'pm/mysite.css' %}"/>
+	
+	<!-- base.html 4 js -->
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="{% static 'pm/temp.js' %}"></script>
 
 {% block head %}
 {% endblock %}
@@ -107,14 +114,13 @@
 
 	<!-- Core JavaScript Files -->
     <script src="{% static 'pm/js/jquery.min.js' %}"></script>
-    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>	 
+     <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>	   
     <script src="{% static 'pm/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'pm/js/jquery.easing.min.js' %}"></script>
 	<script src="{% static 'pm/js/wow.min.js' %}"></script>
 	<script src="{% static 'pm/js/jquery.scrollTo.js' %}"></script>
 	<script src="{% static 'pm/js/nivo-lightbox.min.js' %}"></script>
     <script src="{% static 'pm/js/custom.js' %}"></script>
-    <script src="{% static 'pm/temp.js' %}"></script>
 {% block js %}
 {% endblock %}
 </body>
