@@ -199,6 +199,7 @@ def account_details(request):
         return HttpResponse("Error made.")
     return render_to_response('pm/group_detail.html', {'token': str(token_id) + " added"})
 
+
 @method_decorator(login_required, name='dispatch')
 class UserListView(generic.ListView):
     template_name = 'pm/user_list.html'
