@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from .models import Group, Account, MyUser, User
-from .forms import AccountForm, UserForm, UserProfileForm
+from .forms import AccountForm, UserForm, UserProfileForm, GroupForm
 import datetime
 from PasswordManager import common
 import json
@@ -91,6 +91,37 @@ class GroupCreate(CreateView):
         context = super(GroupCreate, self).get_context_data(**kwargs)
         context['user_id'] = self.request.user.id
         return context
+
+@login_required
+def group_create(request):
+    print("Enter group create")
+    print(request.POST.get('gp_remark'))
+    redirect_page_arg = 0
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+
+        create_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        #TODO modify the following code to get the group information
+        
+        if form.is_valid():
+            gp_user_id = form.cleaned_data['gp_user_id']
+            user = User.objects.get(username=gp_user_id)
+            
+            new_group = Group()
+            new_group.user = user            
+            new_group.name = form.cleaned_data['gp_name']
+            new_group.date_create = create_date
+            new_group.remark = form.cleaned_data['gp_remark']
+            new_group.order_id = form.cleaned_data['gp_order']
+            new_group.save()
+        else:
+            print("Check the following errors ...")
+            print(form.errors)
+    else:
+        form = GroupForm()
+
+    return HttpResponseRedirect(reverse('pm:group-list'))
 
 @method_decorator(login_required, name='dispatch')
 class GroupUpdate(UpdateView):

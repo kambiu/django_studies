@@ -13,6 +13,7 @@ urlpatterns = [
     # group
     url(r'^(?P<pk>[0-9]+)/$', views.GroupDetailView.as_view(), name='group-detail'),
     url(r'^group/add$', views.GroupCreate.as_view(), name='group-add'),
+    url(r'^group/create$', views.group_create, name='group-create'),
     url(r'^group/edit/(?P<pk>[0-9]+)/$', views.GroupUpdate.as_view(), name='group-update'),
     url(r'^group/delete/(?P<pk>[0-9]+)/$', views.GroupDelete.as_view(), name='group-delete'),
     url(r'^token/$', views.token, name='get-token'),

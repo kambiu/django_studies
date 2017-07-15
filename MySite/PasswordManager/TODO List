@@ -1,6 +1,4 @@
 Steps following:
-
-0. Create groups
-1. Combine to template and create the mysite page
+1. Delete groups
 2. Deploy to IIS/Nginx
-3. Datepicker missing
+3. Naviagtion for websites eg. back buttons

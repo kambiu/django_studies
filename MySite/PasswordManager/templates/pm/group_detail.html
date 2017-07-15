@@ -42,13 +42,13 @@
             <td>{{ account.username }}</td>
             <td>{{ account.date_create }}</td>
             <td>{{ account.remark }}</td>
-            <td><button id="edit_acc_{{account.id}}" class="edit-acc" data-toggle="modal" data-target="#myModal">Edit</button></td>
-            <td><button onclick="get_token('{{ account.id }}')">Copy</button></td>
+            <td><button id="edit_acc_{{account.id}}" class="edit-acc btn btn-info" data-toggle="modal" data-target="#myModal">Edit</button></td>
+            <td><button class="btn btn-info" onclick="get_token('{{ account.id }}')">Copy</button></td>
         </tr>
     {% endfor %}
 </table>
 
-<button id="button_create_account" data-toggle="modal" data-target="#myModal">Create New Account</button>
+<button id="button_create_account" class="btn btn-warning" data-toggle="modal" data-target="#myModal">Create New Account</button>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
@@ -60,7 +60,7 @@
                 <h4 class="modal-title">Adding a new account to {{ object.name }} </h4>
             </div>
             <div class="modal-body">
-                {% include 'pm/account_form.html' %}
+                {% include 'pm/form_account.html' %}
             </div>
         </div>
     </div>

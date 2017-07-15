@@ -13,6 +13,13 @@ class AccountForm(forms.Form):
     acc_remark = forms.CharField(label='Remark', max_length=100)
 
 
+class GroupForm(forms.Form):
+    gp_user_id = forms.CharField(label='User', max_length=100, min_length=3)
+    gp_name = forms.CharField(label='Grou Name', max_length=100, min_length=3)
+    gp_remark = forms.CharField(label='Remark', max_length=100, min_length=3)
+    gp_order = forms.IntegerField(label="OrderId")
+
+
 class UserForm(ModelForm):
     class Meta:
         model = User
