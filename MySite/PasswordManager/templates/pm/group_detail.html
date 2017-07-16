@@ -7,8 +7,22 @@
 <script>
     function get_token(account_id) {
         $.get("{% url 'pm:get-token' %}", {acc_id: account_id}, function(data){
-            var token = prompt("Use CTRL-C to copy the password", data);
-        });
+            var token = prompt("Use CTRL-C to copy the password 111", data);
+    //         var msg = "init"
+    //         // $("#textarea").val(data)
+    //         var textarea = document.getElementById("textarea");
+    //         textarea.select();
+    //         try {
+    //             var successful = document.execCommand('copy');
+    //             if (successful) 
+    //                 msg = 'Copied!';
+    //             else 
+    //                 msg = 'Unable to copy!';
+    //         } catch (err) {
+    //             msg = 'Unsupported Browser!';
+    //         }
+    //         alert(msg);
+        });        
     }
 
     $(function () {
@@ -35,6 +49,7 @@
         <th>Remark</th>
         <th>Details</th>
         <th>Fast Copy</th>
+        <th>Delete</th>
     </tr>
     {% for account in object.account_set.all %}
         <tr>
@@ -44,6 +59,7 @@
             <td>{{ account.remark }}</td>
             <td><button id="edit_acc_{{account.id}}" class="edit-acc btn btn-info" data-toggle="modal" data-target="#myModal">Edit</button></td>
             <td><button class="btn btn-info" onclick="get_token('{{ account.id }}')">Copy</button></td>
+            <td><button id="del_acc_{{account.id}}" class="del_acc btn btn-default" data-toggle="modal" data-target="#deleteModal">&#10006;</button></td>
         </tr>
     {% endfor %}
 </table>
@@ -66,14 +82,39 @@
     </div>
 </div>
 
+<!-- Modal for delete account -->
+<div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete account to {{ object.name }} </h4>
+            </div>
+            <div class="modal-body">
+                {% include 'pm/form_delete.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <textarea id="textarea" rows="6" cols="40">text to be copied</textarea> -->
 
 {% endblock %}
 
 {% block js %}
 <script>
-function copyToClipboard(text) {
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
-}
+
+$(".del_acc").click(function() {
+    
+    var attr_id = $(this).attr('id').match(/\d+/)[0];
+    $("#frm_del_acc").val(attr_id);
+    $("#frm_del_user").val("{{ user_id }}");
+    
+    // alert("Are you sure to delete this record (" + attr_id + " + ) ?")
+    //var action_url = "{% url 'pm:account-update' 12345 %}".replace("12345", attr_id)
+    //$('#account_form').attr('action', action_url);
+});
 
 $("#gen_token").click(function() {
     var token_length = parseInt($("#pw_length").val());

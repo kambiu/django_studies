@@ -16,11 +16,14 @@ urlpatterns = [
     url(r'^group/create$', views.group_create, name='group-create'),
     url(r'^group/edit/(?P<pk>[0-9]+)/$', views.GroupUpdate.as_view(), name='group-update'),
     url(r'^group/delete/(?P<pk>[0-9]+)/$', views.GroupDelete.as_view(), name='group-delete'),
+    url(r'^group/del/(?P<pk>[0-9]+)/$', views.GroupDelete.as_view(), name='group-del'),
+    url(r'^group/rename/(?P<pk>[0-9]+)/$', views.group_rename, name='group-rename'),
     url(r'^token/$', views.token, name='get-token'),
     # pw account
     url(r'^account/add$', views.account_create, name='account-create'),
     url(r'^account/update/(?P<account_id>[0-9]+)/$', views.account_update, name='account-update'),
     url(r'^account/$', views.account_details, name='account-details'),
+    url(r'^account/delete$', views.account_delete, name='account-delete'),
     # change key
     url(r'^key/$', views.change_key, name='user-key'),
     # testing

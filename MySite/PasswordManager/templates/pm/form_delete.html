@@ -1,0 +1,7 @@
+<form action="{% url 'pm:account-delete' %}" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete?</p>
+    <input type="hidden" id="frm_del_acc" name="acc_id" value="account_id" />
+    <input type="hidden" id="frm_del_user" name="user_id" value="user_id" />
+    <input type="submit" class="btn btn-info" value="Confirm" />
+    <input type="button" class="btn btn-info" value="Close"  data-dismiss="modal" />
+</form>

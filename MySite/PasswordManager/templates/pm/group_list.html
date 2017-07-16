@@ -5,17 +5,28 @@
 {% block head %}{% endblock %}
 
 {% block body %}
-    <h1>Hello how are you 2016 {{ user }}</h1>
+    <h1>Hello how are you 2017 {{ user }}</h1>
     <p>You got the following Groups:</p>
-    <ul>
-    {% for group in all_groups %}
-        <li><a href="{% url 'pm:group-detail' group.id %}">{{ group.name }}</a></li>
-    {% endfor %}
-    </ul>
-    <hr>
 
+    <table class="table">
+    <tr>
+        <th>Group:</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for group in all_groups %}
+        <tr>
+            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2">            
+                <button type="button" class="btn btn-info gp_del" id="del_gp_{{ group.id }}"><span class="glyphicon glyphicon-trash"></span></button>
+                <button type="button" class="btn btn-info gp_edit" id="edit_gp_{{ group.id }}"> <span class="glyphicon glyphicon-pencil"></span></button>
+            </td>
+            <td class="col-xs-11 col-sm-11 col-md-11 col-lg-11"><a href="{% url 'pm:group-detail' group.id %}">{{ group.name }} </a></td>
+        </tr>
+    {% endfor %}
+    </table>
     
     <button id="btn_create_group" data-toggle="modal" data-target="#group_odal" class="btn btn-warning" onclick="">New Group</button>
+
 
     <!-- Modal -->
     <div class="modal fade" id="group_odal" role="dialog">
@@ -46,6 +57,18 @@ $("#btn_create_group").click(function() {
     $('#form_group').attr('action', "{% url 'pm:group-create' %}");
     $("#submit_group").val("Create Group");
 });
+
+$(".gp_del").click(function() {    
+    var attr_id = $(this).attr('id').match(/\d+/)[0];
+    console.log("enter del gp " + attr_id)
+});
+
+$(".gp_edit").click(function() {    
+    var attr_id = $(this).attr('id').match(/\d+/)[0];
+    console.log("rename del gp " + attr_id)
+});
+
+
 
 </script>
 

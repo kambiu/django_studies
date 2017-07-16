@@ -68,6 +68,7 @@ class GroupListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(GroupListView, self).get_context_data(**kwargs)
         context['user'] = self.request.user.username
+        context['uid'] = self.request.user.pk
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -94,16 +95,11 @@ class GroupCreate(CreateView):
 
 @login_required
 def group_create(request):
-    print("Enter group create")
-    print(request.POST.get('gp_remark'))
-    redirect_page_arg = 0
     if request.method == 'POST':
         form = GroupForm(request.POST)
 
         create_date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-        #TODO modify the following code to get the group information
-        
+       
         if form.is_valid():
             gp_user_id = form.cleaned_data['gp_user_id']
             user = User.objects.get(username=gp_user_id)
@@ -120,6 +116,17 @@ def group_create(request):
             print(form.errors)
     else:
         form = GroupForm()
+
+    return HttpResponseRedirect(reverse('pm:group-list'))
+
+@login_required
+def group_delete(request):
+    print("Enter group delete")
+
+    if request.method == 'POST':
+        pass
+    else:
+        pass
 
     return HttpResponseRedirect(reverse('pm:group-list'))
 
@@ -229,6 +236,26 @@ def account_details(request):
     else:
         return HttpResponse("Error made.")
     return render_to_response('pm/group_detail.html', {'token': str(token_id) + " added"})
+
+@login_required
+def account_delete(request):
+    user_id = ""
+    acc_id = ""
+    if request.method == "POST":
+        user_id = request.POST['user_id']
+        acc_id = request.POST['acc_id']
+
+    to_delete_account = Account.objects.get(id=acc_id)
+    related_group = Group.objects.get(id=to_delete_account.group.id)
+    related_user = User.objects.get(id=related_group.user.id)
+
+    if int(related_user.id) == int(user_id):
+        print("pending delete, confirmed user")
+        to_delete_account.delete()
+    else:
+        print("Cannot delete user by this way")
+
+    return HttpResponseRedirect(reverse('pm:group-detail', args=(related_group.id,)))
 
 
 @method_decorator(login_required, name='dispatch')
