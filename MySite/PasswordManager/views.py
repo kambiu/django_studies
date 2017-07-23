@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
 
 
 def logout_request(request):
@@ -119,22 +119,71 @@ def group_create(request):
 
     return HttpResponseRedirect(reverse('pm:group-list'))
 
+
 @login_required
+def group_edit(request, group_id):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+
+        if form.is_valid():
+            print("form valid")
+            group = Group.objects.get(id=group_id)
+            group.name = form.cleaned_data['gp_name']
+            group.remark = form.cleaned_data['gp_remark']
+            group.order_id = form.cleaned_data['gp_order']
+            group.save()
+        else:
+            print("Check the following errors ...")
+            print(form.errors)
+    else:
+        form = GroupForm()
+
+    return HttpResponseRedirect(reverse('pm:group-list'))
+
+
+@login_required
+@csrf_exempt
 def group_delete(request):
     print("Enter group delete")
-
     if request.method == 'POST':
-        pass
+        group_id = request.POST["group_id"]
+        group = Group.objects.get(id=group_id)
+
+        # delete all account in this group
+        accounts = Account.objects.filter(group=group)
+        for acc in accounts:
+            print("Delete account: " + str(acc))
+            acc.delete()
+        # lastly the group itself
+        print(str(group.name) + "pending delete, confirmed group")
+        group.delete()
     else:
         pass
 
     return HttpResponseRedirect(reverse('pm:group-list'))
 
+
+@login_required
+def group_data(request):
+    if request.method == 'GET':
+        group_id = request.GET['group_id']
+        retrieving_group = Group.objects.get(pk=group_id)
+        dict_details = {}
+        dict_details['gp_user'] = retrieving_group.user.username
+        dict_details['gp_name'] = retrieving_group.name
+        dict_details['gp_remark'] = retrieving_group.remark
+        dict_details['gp_order'] = retrieving_group.order_id
+        return HttpResponse(json.dumps(dict_details))
+    else:
+        return HttpResponse("Error made.")
+    return render_to_response('pm/group_list.html')
+
+
 @method_decorator(login_required, name='dispatch')
 class GroupUpdate(UpdateView):
     template_name = "pm/group_template.html"
     model = Group
-    fields = ['name', 'date_create', 'remark', 'order_id']
+    fields = ['name', 'remark', 'order_id']
     success_url = reverse_lazy("pm:index")
 
 

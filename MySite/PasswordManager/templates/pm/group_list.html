@@ -17,28 +17,51 @@
     {% for group in all_groups %}
         <tr>
             <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2">            
-                <button type="button" class="btn btn-info gp_del" id="del_gp_{{ group.id }}"><span class="glyphicon glyphicon-trash"></span></button>
-                <button type="button" class="btn btn-info gp_edit" id="edit_gp_{{ group.id }}"> <span class="glyphicon glyphicon-pencil"></span></button>
+                <button type="button" class="btn btn-info gp_delete" id="delete_gp_{{ group.id }}" 
+                    data-toggle="modal" data-target="#del_group_modal" desc="{{ group.name }}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <button type="button" class="btn btn-info gp_edit" id="edit_gp_{{ group.id }}" data-toggle="modal" data-target="#group_modal">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
             </td>
             <td class="col-xs-11 col-sm-11 col-md-11 col-lg-11"><a href="{% url 'pm:group-detail' group.id %}">{{ group.name }} </a></td>
         </tr>
     {% endfor %}
     </table>
     
-    <button id="btn_create_group" data-toggle="modal" data-target="#group_odal" class="btn btn-warning" onclick="">New Group</button>
+    <button id="btn_create_group" data-toggle="modal" data-target="#group_modal" class="btn btn-warning" onclick="">New Group</button>
 
 
     <!-- Modal -->
-    <div class="modal fade" id="group_odal" role="dialog">
+    <div class="modal fade" id="group_modal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Adding a new account to {{ object.name }} </h4>
+                    <h4 class="modal-title">Adding a new account to {{ object.name }}</h4>
                 </div>
                 <div class="modal-body">
                     {% include 'pm/form_group.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="del_group_modal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="delete_group_title" class="modal-title">Are you confirm to delete group?</h4>
+                </div>
+                <div class="modal-body text-right">
+                    <input type="hidden" id="delete_group_id" />
+                    <button class="btn btn-warning" id="confirm_delete_group">Yes</button>
+                    <button class="btn btn-primary" data-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
@@ -58,17 +81,43 @@ $("#btn_create_group").click(function() {
     $("#submit_group").val("Create Group");
 });
 
-$(".gp_del").click(function() {    
-    var attr_id = $(this).attr('id').match(/\d+/)[0];
-    console.log("enter del gp " + attr_id)
+$(".gp_delete").click(function() {
+    //Get Group name
+    var gp_name = $(this).attr("desc");
+    $("#delete_group_title").html("Are you confirm to delete Group [" + gp_name + "]  ?");
+
+    // Get group id
+    var group_id = $(this).attr('id').match(/\d+/)[0];
+    console.log("group_id: " + group_id);
+    $("#delete_group_id").val(group_id);
+    
 });
 
-$(".gp_edit").click(function() {    
-    var attr_id = $(this).attr('id').match(/\d+/)[0];
-    console.log("rename del gp " + attr_id)
+$("#confirm_delete_group").click(function() {
+    console.log("confirm_delete_group")
+    var group_id = $("#delete_group_id").val()
+    console.log("Confirm delete gp: " + group_id)
+    // var action_url = "{% url 'pm:group-edit' 12345 %}".replace("12345", group_id)
+    $.post("{% url 'pm:group-del' %}", {"group_id": group_id}, function(data){
+        console.log("Delete Successfully");
+        location.reload();
+    });
 });
 
+$(".gp_edit").click(function() {
 
+    var group_id = $(this).attr('id').match(/\d+/)[0];
+    $.get("{% url 'pm:group-data' %}", {"group_id": group_id}, function(data){
+        data = JSON.parse(data);
+        $("#txt_gp_name").val(data["gp_name"]);
+        $("#txt_gp_remark").val(data["gp_remark"]);
+        $("#txt_gp_order").val(data["gp_order"]);
+    });
+    var action_url = "{% url 'pm:group-edit' 12345 %}".replace("12345", group_id)
+    $('#form_group').attr('action', action_url);
+    $("#submit_group").val("Confirm Changes");
+    
+});
 
 </script>
 
